@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fun Christmas Greeting</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500;700&display=swap');
+
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #030f2f; /* Dark navy */
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .snowflake {
+    position: fixed;
+    top: -10px;
+    font-size: 1.5em;
+    color: #fff;
+    z-index: 9999;
+    user-select: none;
+    pointer-events: none;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(110vh) rotate(360deg); }
+  }
+
+  .page {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: all 1s ease-in-out;
+  }
+
+  .page.active {
+    left: 0;
+    opacity: 1;
+  }
+
+  h1 {
+    font-family: 'Pacifico', cursive;
+    font-size: 3em;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  p {
+    font-size: 1.2em;
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  button {
+    padding: 10px 25px;
+    font-size: 1em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #fff;
+    color: #030f2f;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #f0c000;
+    color: #030f2f;
+  }
+
+  .gift {
+    font-size: 2em;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: transform 0.3s;
+  }
+
+  .gift:hover {
+    transform: scale(1.3) rotate(10deg);
+  }
+
+  .gift-bounce {
+    animation: bounce 0.3s ease;
+  }
+
+  @keyframes bounce {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-15px) scale(1.2); }
+    100% { transform: translateY(0) scale(1); }
+  }
+
+  .gift img {
+    max-width: 300px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+  .flower {
+    font-size: 2em;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Background music -->
+<audio id="bg-music" loop>
+  <source src="Snowman.mp3" type="audio/mp3">
+  Your browser does not support the audio element.
+</audio>
+
+<!-- Snowflakes -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const snowCount = 80; 
+    for(let i=0;i<snowCount;i++){
+      const snow = document.createElement('div');
+      snow.className = 'snowflake';
+      snow.style.left = Math.random() * 100 + 'vw';
+      snow.style.fontSize = (10 + Math.random()*20) + 'px';
+      snow.style.animationDuration = (5 + Math.random() * 10) + 's';
+      snow.style.animationDelay = (Math.random()*10) + 's';
+      snow.textContent = '❄';
+      document.body.appendChild(snow);
+    }
+  });
+</script>
+
+<!-- Pages -->
+<div class="page active" id="page1">
+  <h1>🎄 Happy Christmas! 🎄</h1>
+  <p>Let’s make your 2025 finale magical 💫</p>
+  <button class="next-btn">Next</button>
+</div>
+
+<div class="page" id="page2">
+  <h1>Fun Fact / Joke 😄</h1>
+  <p>Why did the Christmas tree go to the barber? <br> It needed a little trim! 🎄✂️</p>
+  <button class="next-btn">Next</button>
+</div>
+
+<div class="page" id="page3">
+  <h1>Hello there! 😊</h1>
+  <p>Having you in my 2025 made it brighter ✨<br>Can’t wait to create more memories in 2026 with you!</p>
+  <button class="next-btn">Next</button>
+</div>
+
+<div class="page" id="page4">
+  <h1>Unwrap your surprise! 🎁</h1>
+  <p>Click the gift 3 times to see your surprise!</p>
+  <div class="gift" id="gift">🎁</div>
+  <div id="gift-container"></div>
+  <div id="flower" class="flower"></div>
+  <button class="next-btn" style="margin-top:20px;">Next</button>
+</div>
+
+<div class="page" id="page5">
+  <h1>Thank You! 🌟</h1>
+  <p>
+    Having you in my 2025 made it way better ✨<br>
+    Thank you just for being in it!<br>
+    Can’t wait to see you in my 2026 chapter!
+  </p>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const pages = document.querySelectorAll(".page");
+  let currentPage = 0;
+
+  const nextButtons = document.querySelectorAll(".next-btn");
+  let musicStarted = false;
+  const bgMusic = document.getElementById("bg-music");
+
+  nextButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      // Start music on first interaction
+      if(!musicStarted){
+        bgMusic.play().catch(() => console.log("User interaction required to start audio"));
+        musicStarted = true;
+      }
+      pages[currentPage].classList.remove("active");
+      currentPage++;
+      if(currentPage >= pages.length) return;
+      pages[currentPage].classList.add("active");
+    });
+  });
+
+  // Gift interaction with 3 clicks + bounce + flower
+  const gift = document.getElementById("gift");
+  const giftContainer = document.getElementById("gift-container");
+  const flower = document.getElementById("flower");
+  let clickCount = 0;
+  const surpriseImgURL = "YOUR_IMAGE_URL_HERE"; // replace with your image URL
+
+  gift.addEventListener("click", () => {
+    clickCount++;
+    gift.classList.remove("gift-bounce"); // reset animation
+    void gift.offsetWidth; // trigger reflow
+    gift.classList.add("gift-bounce"); // add bounce animation
+
+    if(clickCount >= 3){
+      gift.style.display = "none"; // hide gift emoji
+      const img = document.createElement("img");
+      img.src = surpriseImgURL;
+      giftContainer.appendChild(img);
+      flower.textContent = "🌸";
+    }
+  });
+});
+</script>
+
+</body>
+</html>
